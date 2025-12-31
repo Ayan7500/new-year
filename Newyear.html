@@ -3,89 +3,144 @@
 <head>
 <meta charset="UTF-8">
 <title>Happy New Year 🎉</title>
+
 <style>
-  body {
-    margin: 0;
-    height: 100vh;
-    background: radial-gradient(circle at bottom, #020024, #090979, #000);
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Segoe UI', sans-serif;
-    color: white;
-  }
+body {
+  margin: 0;
+  height: 100vh;
+  background: radial-gradient(circle at bottom, #020024, #090979, #000);
+  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  color: white;
+}
 
-  h1 {
-    font-size: 3rem;
-    text-align: center;
-    animation: glow 2s infinite alternate;
-    z-index: 10;
-  }
+/* POPPING TEXT */
+h1 {
+  position: absolute;
+  top: 35%;
+  width: 100%;
+  text-align: center;
+  font-size: 3.2rem;
+  animation: pop 1.5s ease-out;
+}
 
-  @keyframes glow {
-    from { text-shadow: 0 0 10px gold; }
-    to { text-shadow: 0 0 30px orange; }
-  }
+@keyframes pop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
 
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
+.glow {
+  animation: glow 2s infinite alternate;
+}
 
-  .tap {
-    position: absolute;
-    bottom: 20px;
-    font-size: 1rem;
-    opacity: 0.8;
-  }
+@keyframes glow {
+  from { text-shadow: 0 0 10px gold; }
+  to { text-shadow: 0 0 35px orange; }
+}
+
+/* SECRET BUTTON */
+#secretBtn {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 15px;
+  background: gold;
+  border: none;
+  border-radius: 20px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* SECRET MESSAGE */
+#secret {
+  position: absolute;
+  top: 60%;
+  width: 100%;
+  text-align: center;
+  font-size: 1.6rem;
+  opacity: 0;
+  transform: scale(0);
+  transition: all 0.8s ease;
+}
+
+#secret.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* CANVAS */
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 </style>
 </head>
 
 <body>
+
 <canvas id="fireworks"></canvas>
 
-<h1>
-🎉 Happy New Year Ananya 🎉<br>
-May this be your best year twinn😼😝 ✨
+<h1 class="glow">
+🎉 HAPPY NEW YEAR ANANYA 🎉<br>
+THIS WILL BE THE BESTTT YEARRR FRRR !! 
 </h1>
 
-<div class="tap">Tap anywhere for fireworks 🎆</div>
+<div id="secret">
+💌 Secret Message 💌<br>
+Heyy twinnn !!! <br>
+This secret message is for you🫵🫵 <br>
+I just wanted to thank you for everything <br>
+You always talked with me even when I was feeling low <br>
+Youu are thee bessttt frrrr !!!! <br> 
+Love you 🫵🫵🫶🫶 <br>
+</div>
+
+<button id="secretBtn">Click to reveal a secret 💖</button>
+
+<audio id="bgMusic" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 const canvas = document.getElementById("fireworks");
 const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
 window.onresize = () => {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
 };
 
+let particles = [];
+let musicStarted = false;
+
 function firework(x, y) {
-  for (let i = 0; i < 50; i++) {
+  for (let i = 0; i < 60; i++) {
     const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 5 + 2;
-    const life = Math.random() * 30 + 20;
+    const speed = Math.random() * 6 + 2;
     particles.push({
       x, y,
       vx: Math.cos(angle) * speed,
       vy: Math.sin(angle) * speed,
-      life
+      life: 40
     });
   }
 }
 
-let particles = [];
-
 canvas.addEventListener("click", e => {
   firework(e.clientX, e.clientY);
+
+  if (!musicStarted) {
+    document.getElementById("bgMusic").play();
+    musicStarted = true;
+  }
 });
 
 function animate() {
-  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.fillStyle = "rgba(0,0,0,0.25)";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   particles.forEach((p, i) => {
@@ -99,8 +154,13 @@ function animate() {
 
   requestAnimationFrame(animate);
 }
-
 animate();
+
+/* SECRET BUTTON LOGIC */
+document.getElementById("secretBtn").onclick = () => {
+  document.getElementById("secret").classList.add("show");
+};
 </script>
+
 </body>
 </html>
